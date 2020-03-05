@@ -27,9 +27,10 @@ module.exports = {
         return result;
     },
     complete: async (todoId) => {
-        const query = `UPDATE ${TABLE_NAME} SET iscompleted=1 `
-            + ` WHERE id = '${todoId}'`;
-        const result = await pool.queryParam_None(query);
+        const params = [1, todoId]
+        const query = `UPDATE ${TABLE_NAME} SET iscompleted = ? `
+            + ` WHERE id = ?`;
+        const result = await pool.queryParam_Parse(query, params);
         if(result.affectedRows == 0) throw new NotMatchedError();
         return result;
     },

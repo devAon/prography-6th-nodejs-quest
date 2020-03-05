@@ -14,10 +14,16 @@ module.exports = {
         const result = await pool.queryParam_Parse(query, values);
         return result[0];
     },
-    create: (todoId, content ) => {
-        const query = `INSERT INTO comment(contents, todo_id) VALUES(?, ?);`
-        const params = [todoId, content]
-        return pool.queryParam_Parse(query, params);
+    // create: (todoId, content ) => {
+    //     const query = `INSERT INTO comment(contents, todo_id) VALUES(?, ?);`
+    //     const params = [todoId, content]
+    //     return pool.queryParam_Parse(query, params);
+    // },
+    create: (json) => {
+        console.log(model)
+        const query = `INSERT ${TABLE_NAME}(${Object.keys(json).join(', ')}) ` + 
+                    'VALUES('+ Object.entries(json).map(it => `'${it[1]}'`).join(',') + ')';
+        return pool.queryParam_None(query);
     },
     update: async (commentIdx, json) => {
         const query = `UPDATE ${TABLE_NAME}`
