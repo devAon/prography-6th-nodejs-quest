@@ -1,3 +1,83 @@
+
+>**Project 전체 구조 (>src)**
+
+	>config
+		dbconfig.js
+	>errors
+		DatabaseError.js
+		DuplicatedEntryError.js
+		index.js
+		NoReferenceRowError.js
+		NotMatchedError.js
+		ParameterError.js
+	>models
+		Comment.js
+		Todo.js
+	
+	>modules
+		>db
+		  pool.js
+		>utils
+		  index.js
+		  responseMessage.js
+		  statusCode.js
+		  util.js
+	
+	>routes
+		>todos
+			>todos.js
+			>index.js
+			router.use('/:todoId/comments', require('./comments'));
+			router.use('/', require('./todos'));		
+			
+			>comments
+				>comments.js
+				>index.js
+				router.use('/', require('./comments'));	
+		>index.js
+		router.use('/todos', require('./todos'));
+	
+	app.js
+	index.js
+
+
+
+> **req.query**
+
+router.use('/:todoId/comments', require('./comments')); 
+
+./comments에 todoId req.query값을 넘겨 사용하려면
+
+const router = express.Router({mergeParams: true});  
+
+**{mergeParams: true}** 를 적어야 한다.
+
+
+
+> **req.body** 
+
+body값을 사용하기 위해서는 
+
+body-parser가 필요하다. 
+
+body-parser를 사용하기 위해 app.js에 아래의 코드를 추가해줬다.
+
+**app.js**
+
+```
+import bodyParser from 'body-parser';
+
+
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+app.use(bodyParser.json());
+```
+
+
+
+
+
 # Prography 6th NodeJS Quest
 
 > 프로그파피 NodeJS 전형의 비중은 **면접(70%), 과제(30%)** 입니다. 과제의 완성도보다 **면접**이 더 중요합니다.
