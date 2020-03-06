@@ -8,8 +8,28 @@ const { util, status, message } = require('../../modules/utils');
 const NAME = '할일'
 
 
+//1. 할일 등록: `POST /todos`  
+router.post('/', (req, res) => {
+    const { title, description } = req.body;
+
+    if(!title || !description) throw new ParameterError();
+    Todo.create({title, description})
+    .then(result => {
+        const insertId = result.insertId;
+        res.status(status.OK)
+        .send(util.successTrue(message.X_CREATE_SUCCESS(NAME), insertId));
+    })
+    .catch(err => {
+        console.log(err);    
+        res.status(err.status || 500);
+        res.send(util.successFalse(err.message));
+    });
+});
+
+
 //2. 할일 목록: `GET /todos`  ok
 router.get('/', async (req, res) => {
+    console.log("목록")
     Todo.readAll()
     .then(result => {
         res.status(status.OK)
@@ -37,27 +57,6 @@ router.get('/:todoId', (req, res) => {
         res.send(util.successFalse(err.message));
     });
 });
-
-
-//1. 할일 등록: `POST /todos`  
-router.post('/', (req, res) => {
-    const { title, description } = req.body;
-
-    if(!title || !description) throw new ParameterError();
-    Todo.create({title, description})
-    .then(result => {
-        const insertId = result.insertId;
-        res.status(status.OK)
-        .send(util.successTrue(message.X_CREATE_SUCCESS(NAME), insertId));
-    })
-    .catch(err => {
-        console.log(err);    
-        res.status(err.status || 500);
-        res.send(util.successFalse(err.message));
-    });
-});
-
-
 
 
 //4. 할일 수정: `PUT /todos/:todoId`
@@ -116,5 +115,7 @@ router.delete('/:todoId', (req, res) => {
         res.send(util.successFalse(err.message));
     });
 });
+
+
 
 module.exports = router;

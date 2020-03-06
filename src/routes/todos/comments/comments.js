@@ -27,7 +27,13 @@ router.get('/', async (req, res) => {
 
 //9. 할일의 댓글 읽기: `GET /todos/:todoId/comments/:commentId`  ok
 router.get('/:commentId', (req, res) => {
-    const { commentId } = req.params;
+    const { commentId, todoId } = req.params;
+    console.log(commentId)
+    console.log(req.params)
+
+    //const { todoId } = req.params;
+    console.log(todoId)
+
     if(!commentId) throw new ParameterError();
     Comment.readByIdx(commentId)
     .then(result => {
@@ -47,10 +53,10 @@ router.post('/',  (req, res) => {
     const { todoId } = req.params;
     const { content } = req.body;
     if(!todoId ||  !content) throw new ParameterError();
-    Comment.create( todoId, content)
+    Comment.create( content, todoId)
     .then(result => {
         res.status(status.OK)
-        .send(util.successTrue(message.X_CREATE_SUCCESS(NAME), result));
+        .send(util.successTrue(message.X_CREATE_SUCCESS(NAMEC), result));
     })
     .catch(err => {
         console.log(err);    
@@ -60,11 +66,11 @@ router.post('/',  (req, res) => {
 });
 
 //10. 할일의 댓글 수정: `PUT /todos/:todoId/comments/:commentId`
-router.put('/:commentIdx',  (req, res) => {
-    const { commentIdx } = req.params;
+router.put('/:commentId',  (req, res) => {
+    const { commentId } = req.params;
     const json = req.body;
-    if(!commentIdx || Object.keys(json).length == 0) throw new ParameterError();
-    Comment.update(commentIdx, json)
+    if(!commentId || Object.keys(json).length == 0) throw new ParameterError();
+    Comment.update(commentId, json)
     .then(result => {
         const affectedRows = result.affectedRows;
         if(affectedRows == 0) throw new NotMatchedError();
