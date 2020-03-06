@@ -39,5 +39,11 @@ module.exports = {
         const result = await pool.queryParam_None(query);
         if(result.affectedRows == 0) throw new NotMatchedError();
         return result;
+    },
+    searchTitle : async (title) => {
+        const query = `SELECT * FROM ${TABLE_NAME} WHERE title LIKE '%${title}%'`;
+        const result = await pool.queryParam_Parse(query);
+        if(result.affectedRows == 0) throw new NotMatchedError();
+        return result[0];
     }
 }
